@@ -1,0 +1,731 @@
+\documentclass{article}
+\usepackage{arxiv}
+
+\usepackage[utf8]{inputenc} % allow utf-8 input
+\usepackage[T1]{fontenc}    % use 8-bit T1 fonts
+\usepackage{hyperref}       % hyperlinks
+\usepackage{url}            % simple URL typesetting
+\usepackage{booktabs}       % professional-quality tables
+\usepackage{nicefrac}       % compact symbols for 1/2, etc.
+\usepackage{microtype}      % microtypography
+\usepackage{lipsum}
+\usepackage{algpseudocode}
+\usepackage{algorithm}
+\usepackage[german]{babel} % prefer english over german
+\usepackage{multicol}
+\usepackage{tikz}
+\usetikzlibrary{angles,arrows,babel,calc,patterns,quotes}
+
+\usepackage{graphicx}
+\graphicspath{ {./img/} }
+
+\usepackage{minted}
+\usepackage{xcolor}
+\usemintedstyle{manni}
+
+\usepackage{eurosym}
+\usepackage{amstext}
+
+\usepackage{booktabs}
+
+\usepackage{amssymb, amsmath, amsthm, amsfonts}
+\usepackage{mathtools}
+
+\usepackage{fontspec}
+
+\usepackage{csquotes}
+
+\usepackage[backend=biber, style=alphabetic]{biblatex}
+\addbibresource{Quellen.bib}
+
+\usepackage{newunicodechar}
+
+\usepackage{caption}
+
+\usepackage{bbm} % provides \mathbbm for double struck numerals etc.
+
+\usepackage{newtxmath}
+
+\newenvironment{longlisting}{\captionsetup{type=listing}}{}
+
+\setmonofont[
+  Mapping=tex-text,
+  Scale=0.90,
+  UprightFont=*-Regular,
+  BoldFont=*-Bold,
+  ]{Fira Code}
+%\setmonofont[Mapping=tex-text, Scale=0.90,]{Droid Sans Mono}
+
+\theoremstyle{plain} %Text ist Kursiv
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Korollar}
+
+\theoremstyle{definition} %Text ist \"upright"
+\newtheorem{remark}[theorem]{Bemerkung}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Beispiel}
+\newtheorem{algo}[theorem]{Algorithm}
+\newtheorem{problem}[theorem]{Problem}
+\let\proof\undefined
+\newtheorem{proof}[theorem]{Beweis}
+\newtheorem{theo}[theorem]{Satz}
+\newtheorem{anno}[theorem]{Anmerkung}
+\newtheorem{solution}[theorem]{Lösung}
+
+% Colors
+\definecolor{bg}{rgb}{0.95,0.95,0.95}
+
+\newcommand{\sfloor}[1]{\left\lfloor #1 \right\rfloor} % scaling floor function
+\newcommand{\sceil}[1]{\left\lceil #1 \right\rceil} % scaling ceil function
+\newcommand{\floor}[1]{\lfloor #1 \rfloor} % floor function
+\newcommand{\ceil}[1]{\lceil #1 \rceil} % ceil function
+\newcommand{\abs}[1]{\left\lVert#1\right\rVert} % Absolute value of #1
+\newcommand{\unit}[1]{\hat{#1}} % unit vector
+\newcommand{\rank}[1]{\text{Rang} (#1)}
+
+\newcommand{\cpp}[1]{\mintinline{cpp}|#1|}
+\newcommand{\make}[1]{\texttt{#1}}
+\newcommand{\bash}[1]{\mintinline{bash}|#1|}
+\newcommand{\py}[1]{\mintinline{python}|#1|}
+
+
+\title{ Studienarbeit zum Modul \emph{Mathematische Denksportaufgaben} }
+
+\rhead{\includegraphics[width=1.5cm]{FHWS}}
+\lhead{}
+
+\author{
+  Stefan Volz\\
+  Fakultät für angewandte Natur- und Geisteswissenschaften\\
+  Hochschule für angewandte Wissenschaften Würzburg-Schweinfurt\\
+  Studiengang Technomathematik\\
+  Matrikelnummer: 3519001\\
+  \texttt{stefan.volz@student.fhws.de}\\
+}
+
+\date{\today, Wintersemester 2020/21}
+
+%\renewcommand{\headeright}{Studienarbeit}
+%\renewcommand{\undertitle}{Studienarbeit}
+
+\begin{document}
+
+\begin{center}
+  \includegraphics[width=0.5\textwidth]{FHWS}
+\end{center}
+
+\maketitle
+
+\begin{abstract}
+  Die Arbeit betrachtet kombinatorische, zahlentheoretische und geometrische Rätsel.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+\section{Fibonaccis Hasen}
+
+\subsection{Grundproblem}
+
+Wir betrachten zunächst das in \cite[S. 46, Problem Nr. 57]{AlgoPuzzles} formulierte Problem:
+\begin{problem} \label{rabbit1}
+A man put a pair of rabbits in a place surrounded on all sides by a wall. The initial pair of rabbits (male and female) are newborn. All rabbit pairs are not fertile during the first month of life but give birth to one new male/female pair at the end of the second month and every month thereafter. How many pairs of rabbits will be there in a year?
+\end{problem}
+bzw. auf Deutsch
+\begin{problem}
+Ein Mann platziert ein Paar neugeborener Hasen (Männchen und Weibchen) in einem umzäunten Gebiet. Alle Hasen Paare sind während ihres ersten Lebensmonats nicht geschlechtsreif, aber zeugen jeden Monat ab dem Ende ihres zweiten Lebensmonats ein neues Paar Hasen (Männchen und Weibchen). Wieviele Paare Hasen gibt es nach einem Jahr?
+\end{problem}
+\begin{solution}
+  Es seien $(h_n)_{n \in \mathbb{N}_0}, (p_n)_{n \in \mathbb{N}_0}$ Folgen, welche die Anzahl an Hasenpaaren bzw. die Anzahl an geschlechtsreifen Hasen im $n$-ten Monat beschreiben.
+  Dann gilt $h_0 = 1, p_0 = 0$ (ein initiales, nicht-geschlechtsreifes Hasenpaar), $\forall n \in \mathbb{N}_0 : h_{n+1} = h_n + p_n$ (alle geschlechtsreifen Hasen produzieren pro Monat ein paar Hasen) sowie $\forall n \in \mathbb{N}_0 : p_{n+1} = h_n$ (Hasen benötigen einen Monat um aufzuwachsen). Dann gilt für $n \in \mathbb{N}_0$ direkt $h_{n+2} = h_{n+1} + p_{n+1} = h_{n+1} + h_n$, was zusammen mit der Anfangsbedingung $h_0 = 1, p_0 = 0 \implies h_1 = 1$ die bekannte Fibonacci-Folge $1,1,2,3,5,8,13,...$\footnote{OEIS Nr. A000045} liefert.
+  Am Ende des Jahres(nach zwölf Monaten) existieren daher $[\frac{1}{\sqrt{5}} (\frac{1 + \sqrt{5}}{2})^{12}] = 144$ Hasen - wobei $[\cdot]$ die Gaußklammer bezeichnet.
+\end{solution}
+
+\subsection{Verallgemeinerung 1}
+
+Wir modifizieren obiges Problem nun ein wenig:
+
+\begin{problem}
+Es seien $N \in \mathbb{N}$ paar kleiner Hasen gegeben. Alle Hasen sind innerhalb der ersten zwei Monate ihres Lebens nicht geschlechtsreif, produzieren jedoch ab ab dem Ende ihres dritten Lebensmonats jeden Monat ein Paar Hasen. Wieviele Hasen existieren nach $k \in \mathbb{N}_0$ Monaten?
+\end{problem}
+\begin{solution}
+  Es sei $h_0 = h_1 = N, \forall n \in \mathbb{N}_0 : h_{n+1} = h_n + p_n$ analog zu \ref{rabbit1} definiert, für $p_n$ gilt nun die Rekursionsgleichung $\forall n \in \mathbb{N}_0 : p_{n+2} = h_n$. Wir definieren die formalen Potenzreihen $P(x) := \sum_0^\infty p_n x^n$ und $H(x) := \sum_0^\infty h_n x^n$. Wir multiplizieren zunächst $h_{n+1} = h_n + p_n$ und $p_{n+2} = h_n$ beidseitig mit $x^{n+1}$ bzw. $x^{n+2}$ und summieren anschließend von $n=0$ beginnend beidseitig auf:
+  \begin{align}
+     & \sum_{n=1}^\infty h_n x^n & = & x \sum_{n=0}^\infty (h_n + p_n) x^n      & \text{ und } & \sum_{n=2}^\infty p_n x^n & = & x^2 \sum_{n=0}^\infty h_n x^n              \\
+     & \iff H(x) - h_0           & = & x (H(x) + P(x))                          & \text{ und } & P(x) - p_0 - p_1x         & = & x^2 H(x)                                   \\
+     & \iff H(x)                 & = & \frac{P(x) - p_0 - p_1x}{x^2}            & \text{ und } & P(x)                      & = & \frac{H(x)(1-x) - h_0}{x}                  \\
+     & \iff H(x)                 & = & -\frac{x(p_0 + p_1x) + h_0}{x^3 + x - 1} & \text{ und } & P(x)                      & = & \frac{(x-1)(p_1x + p_0) - h_0x^2}{x^3+x-1}
+  \end{align}
+  Die Koeffizienten der Taylorentwicklung in $0$ der generierenden Funktion $H(x)$ liefern uns nun $h_n$. Betrachtet man die ersten Glieder der Taylorentwicklung so liegt folgende Gleichheit nahe:
+  \begin{align}
+    \forall n \in \mathbb{N}_0 : h_n = \frac{1}{n!}D^n H(0) = a_n h_0 + a_{n-1} p_0 + a_{n-2} p_1 \label{rabbitSolution1} \\ \text{ mit\footnotemark } a_n = \sum_{k=0}^{\floor{\frac{n}{3}}} \binom{n-2k}{k} = e_1^T A^n e_1, A = \left(\begin{matrix}
+        1 & 1 & 0 \\ 0 & 0 & 1 \\ 1 & 0 & 0
+      \end{matrix} \right), e_1 = (1, 0, 0)^T.
+  \end{align}
+  \footnotetext{OEIS Nr. A078012}
+  Da $\rank{A}= 3$ ist hierbei insbesondere für alle $n \in \mathbb{N}_0 : a_{-n}$ wohldefiniert.
+  \begin{proof}
+    Es sei $n \in \mathbb{N}_0$, dann gilt $h_{n+2} = h_n + p_n, p_{n+2} = h_n$. Man verifiziert leicht, dass für $n \leq 2$ die Gleichung \ref{rabbitSolution1} gilt, sei daher $n > 2$. Dann folgt $p_n = h_{n-2} \implies h_{n+1} = h_{n-2} + h_n$. Setzen wir hier Gl. \ref{rabbitSolution1} ein, so folgt: \begin{align*}
+       & h_{n+1} = h_{n-2} + h_n                                                                                                                                                                             \\
+       & \iff e_1^TA^{n+1} e_1 h_0 + e_1^TA^n e_1 p_0 + e_1^TA^{n-1} e_1 p_1                                               \overset{!}{=} e_1^TA^{n-2} e_1 h_0 + e_1^TA^{n-3} e_1 p_0 + e_1^TA^{n-4} e_1 p_1 \\ & \hspace*{7.5cm} + e_1^TA^n e_1 h_0 + e_1^TA^{n-1} e_1 p_0 + e_1^TA^{n-2} e_1 p_1 \\
+       & \iff e_1^T (h_0(A^{n+1} - A^{n-2} - A^{n}) + p_0(A^n - A^{n-3} - A^{n-1}) + p_1(A^{n-1} - A^{n-4} - A^{n-2})) e_1 \overset{!}{=} 0                                                                  \\
+       & \iff e_1^T (h_0A^{n-2} + p_0A^{n-3} + p_1A^{n-4}) (A^3 - A^2 - I_3) e_1 \overset{!}{=} 0 \text{,  mit } A^3 - A^2 - I_3 = 0                                                                         \\
+       & \iff 0 = 0
+    \end{align*}
+    Wobei $I_3 = (\delta_{i,j})_{1 \leq i,j \leq 3}$ die Einheitsmatrix des $\mathbb{R}^{3\times3}$ bezeichnet. Somit ist bewiesen, dass Gleichung \ref{rabbitSolution1} tatsächlich eine Lösung der Rekursionsgleichung ist.
+
+    \qed
+  \end{proof}
+
+  Nach $k$ Monaten existieren mit $h_0 = N, p_0 = p_1 = 0$ also $h_k = e_1^T (h_0 \left(\begin{matrix} 1 & 1 & 0 \\ 0 & 0 & 1 \\ 1 & 0 & 0\end{matrix}\right)^k + p_0 \left(\begin{matrix} 1 & 1 & 0 \\ 0 & 0 & 1 \\ 1 & 0 & 0\end{matrix}\right)^{k-1} + p_1 \left(\begin{matrix} 1 & 1 & 0 \\ 0 & 0 & 1 \\ 1 & 0 & 0\end{matrix}\right)^{k-2})e_1 = N e_1^T \left(\begin{matrix} 1 & 1 & 0 \\ 0 & 0 & 1 \\ 1 & 0 & 0\end{matrix}\right)^k e_1$ Hasenpaare, von denen $p_k = h_{k-2}$ ausgewachsen sind.
+\end{solution}
+
+\subsection{Verallgemeinerung 2}
+
+Wir modifizieren obiges Problem ein weiteres mal:
+
+\begin{problem}
+Es seien $n \in \mathbb{N}_0$ Paar kleiner, und $N \in \mathbb{N}_0$ Paar ausgewachsener Hasen gegeben. Alle Hasen sind innerhalb der ersten $M \in \mathbb{N}_0$ Monate ihres Lebens nicht geschlechtsreif, produzieren jedoch ab ab dem Ende ihres $M+1$-ten Lebensmonats jeden Monat $G \in \mathbb{N}$ Paar Hasen. Wieviele Hasen existieren nach $m \in \mathbb{N}_0$ Monaten?
+\end{problem}
+
+Das lineare System linearer Rekurrenzgleichungen zu obiger Aufgabe ist
+\begin{align}
+  \forall \eta \in \mathbb{N}_0 : h_{\eta+1}   & = h_\eta + G \cdot p_\eta \\
+  \forall \eta \in \mathbb{N}_0 : p_{\eta + M} & = h_\eta
+\end{align}
+mit den Randbedingungen \begin{align}
+  h_0 = n + N, p_0 = ... = p_{M - 1} = N.
+\end{align}
+Mit diesen Verfahren wir analog zur ersten Verallgemeinerung und erhalten somit:
+\begin{align}
+   & \sum_{\eta=1}^\infty h_{\eta} x^{\eta} & = & x \sum_{\eta=0}^\infty (h_{\eta} + p_{\eta}) x^{\eta}             & \text{ und } & \sum_{\eta=M}^\infty p_{\eta} x^{\eta} & = & x^M \sum_{\eta=0}^\infty h_{\eta} x^{\eta}                            \\
+   & \iff H(x) - h_0                        & = & x (H(x) + GP(x))                                                  & \text{ und } & P(x) - \sum_{\eta=0}^M p_\eta x^\eta   & = & x^M H(x)                                                              \\
+   & \iff H(x)                              & = & \frac{P(x) - \sum_{\eta=0}^{M-1} p_\eta x^\eta}{x^M}              & \text{ und } & P(x)                                   & = & \frac{H(x)(1-x) - h_0}{Gx}                                            \\
+   & \iff H(x)                              & = & -\frac{Gx\sum_{\eta=0}^{M-1}p_\eta x^\eta + h_0}{x^{M+1} + x - 1} & \text{ und } & P(x)                                   & = & \frac{(x-1)\sum_{\eta=0}^{M-1} p_\eta x^\eta - h_0 x^M}{Gx^{M+1}+x-1}
+\end{align}
+
+Man überprüft leicht, dass es sich tatsächlich um eine Verallgemeinerung des vorherigen Problems handelt. Mittels Matlab lassen sich leicht einige Taylorpolynome bestimmen. Für $M=2, G$ beliebig scheint für die Koeffizienten $a_\nu^{(2,G)}$ von $h_0$ in der Taylorentwicklung von $F$ die Gleichung \begin{align*}
+  a_\nu^{(2,G)} = \left(\begin{matrix}
+      1 & 1 & 0 \\
+      0 & 0 & 1 \\
+      G & 0 & 0
+    \end{matrix}\right)^\nu
+\end{align*}
+zu gelten. Allgemein gilt $a_0 = ... = a_M = 1, \forall \eta > M: a_{\eta+1} = a_\eta + G a_{\eta - M}$. Für $M = 3, G=1$ bzw. $M=4, G=1$ sind \begin{align*}
+  a_\nu^{(3, 1)} = e_1^T \left(\begin{matrix}
+      1 & 1 & 0 & 0 \\
+      0 & 0 & 1 & 0 \\
+      0 & 0 & 0 & 1 \\
+      1 & 0 & 0 & 0
+    \end{matrix}\right)^\nu e_1,
+  a_\nu^{(4, 1)} = e_1^T \left(\begin{matrix}
+      1 & 1 & 0 & 0 & 0 \\
+      0 & 0 & 1 & 0 & 0 \\
+      0 & 0 & 0 & 1 & 0 \\
+      0 & 0 & 0 & 0 & 1 \\
+      1 & 0 & 0 & 0 & 0
+    \end{matrix}\right)^\nu e_1
+\end{align*}
+gute Kandidaten.
+Eine Verbindung und Verallgemeinerung dieser Schemata liefert
+\begin{align*}
+  a_\nu^{(M,G)} = e_1^T \left( \begin{array}{@{}c|c@{}}
+      e_1 & I_M \\
+      \hline
+      G   & 0
+    \end{array}\right)^\nu e_1.
+\end{align*}
+Es verbleibt das Problem der Bestimmung der $M$ Koeffizienten $x_{(\nu,i)}^{(M,G)}, i \in \{0, ..., M-1\}$ von $p_i$ im $\nu$-ten Term der Taylorentwicklung von $H$. Ein Blick auf die Taylorpolynome legt hierbei \begin{align}
+  x_{(\nu,i)}^{(M,G)} = G a_{\nu-(i + 1)}^{(M,G)} = G e_1^T \left( \begin{array}{@{}c|c@{}}
+    e_1 & I_M \\
+    \hline
+    G   & 0
+  \end{array}\right)^{\nu-(i+1)} e_1
+\end{align}
+nahe, womit sich im Ganzen \begin{align}
+  h_\nu = e_1^T (\sum_{k=0}^{M} y_k G^{1-\delta_{0,k}} \left( \begin{array}{@{}c|c@{}}
+    e_1 & I_M \\
+    \hline
+    G   & 0
+  \end{array}\right)^{\nu-k}) e_1, y_0 := h_0, \forall 0 < k < M: y_k := p_{k-1}
+\end{align}
+ergibt.
+
+\begin{proof}
+  Der Beweis beginnt analog zum speziellen Fall.
+  Es sei $A := \left( \begin{array}{@{}c|c@{}}
+        e_1 & I_M \\
+        \hline
+        G   & 0
+      \end{array}\right).$ Kombinieren wir beide Ursprünglichen Rekurrenzgleichungen erhalten wir \begin{align}
+     & h_{\nu+1}                                                                                                                                                                                                                                                      =              h_\nu + Gh_{\nu-M}                    \\
+     & \iff e_1^T (\sum_{k=0}^{M} y_k G^{1-\delta_{0,k}} A^{\nu + 1 - k}) e_1                                      \overset{!}{=} e_1^T (\sum_{k=0}^{M} y_k G^{1-\delta_{0,k}} A^{\nu-k}) e_1 + e_1^T (\sum_{k=0}^{M} y_k G^{1 + 1-\delta_{0,k}} A^{\nu - M - k}) e_1                                                      \\
+     & \iff e_1^T ( \sum_{k=0}^{M} y_k G^{1-\delta_{0,k}} (A^{\nu - k + 1} - A^{\nu - k} - GA^{\nu - k - M}) ) e_1                                                                                                                                                                                       \overset{!}{=}  0 \\
+     & \iff e_1^T ( \sum_{k=0}^{M} y_k G^{1-\delta_{0,k}} A^{\nu - k - M} (A^{1 + M} - A^{M} - G I_{M+1}) ) e_1                                                                                                                                                                                         \overset{!}{=}  0  \\
+     & \impliedby A^{1 + M} - A^{M} - G I_{M+1} = 0 \label{rabbit3}
+  \end{align}
+
+  %Wobei
+  %\begin{align}
+  %  A^M = \left(\begin{matrix}
+  %      1      & 1      & \hdots & 1      \\
+  %      G      & 0      & \hdots & 0      \\
+  %      \vdots & \ddots & \ddots & \vdots \\
+  %      G      & \hdots & G      & 0
+  %    \end{matrix}\right) \\
+  %  A - I_{M+1} = \left( \begin{array}{@{}c|c@{}}
+  %      0 & I_M \\
+  %      \hline
+  %      G & 0
+  %    \end{array}\right) + \left(
+  %  \begin{array}{@{}c|c@{}}
+  %      0 & 0        \\
+  %      \hline
+  %      0 & -I_{M+1}
+  %    \end{array}\right)             \\
+  %  p_A = (x-1)x^M - G (-1)^M = x^{M+1} - x^M - G (-1)^M \text{ ist das %charakterisitische Polynom von } A
+  %\end{align}
+  Wie man z.B. mittels des Laplace'schen Entwicklungssatzes leicht verifiziert gilt für das charakterisitische Polynom $P_A \in \mathbb{R}[t]$ von $A$: $P_A = (t - 1) \cdot t^M - G (-1)^{2M} = t^{M+1} - t^M - G$. Gleichung \ref{rabbit3} folgt daher direkt aus dem Satz von Cayley-Hamilton\cite[S. 109]{LiesenMehrmann} womit die zu zeigende Aussage bewiesen ist.
+
+  \qed
+\end{proof}
+
+% Wir wissen also, dass $h_\nu^*$ die Rekurrenzgleichung erfüllt - es bleibt lediglich % zu zeigen, dass auch die Randbedingungen erfüllt sind.
+% 
+% Wir setzen $$h_\nu := e_1^T (\sum_{k=0}^{M + 1 + \nu} y_k G^{1-\delta_{0,k}} \left( % \begin{array}{@{}c|c@{}}
+%     e_1 & I_M \\
+%     \hline
+%     G   & 0
+%   \end{array}\right)^{\nu-k}) e_1, \hspace*{1cm} y_0 = n, \forall k > 0 : y_k = N$$
+% 
+\section{Conways Dezimalzahl}
+Das folgende Problem wurde im Quanta Magazine\cite{QuantaConway} veröffentlicht und wird dem britischen Mathematiker John Conway zugeschrieben:
+\begin{problem}
+Es sei $n = (x_9x_8x_7x_6x_5x_4x_3x_2x_1x_0)_{10}$ eine Dezimalzahl für die $x_i \neq x_j \forall i \neq j$ und
+\begin{align*}
+  1  & | (x_9         )_{10}                   \\
+  2  & | (x_9x_8        )_{10}                 \\
+  3  & | (x_9x_8x_7       )_{10}               \\
+  4  & | (x_9x_8x_7x_6     )_{10}              \\
+  5  & | (x_9x_8x_7x_6x_5     )_{10}           \\
+  6  & | (x_9x_8x_7x_6x_5x_4    )_{10}         \\
+  7  & | (x_9x_8x_7x_6x_5x_4x_3   )_{10}       \\
+  8  & | (x_9x_8x_7x_6x_5x_4x_3x_2  )_{10}     \\
+  9  & | (x_9x_8x_7x_6x_5x_4x_3x_2x_1 )_{10}   \\
+  10 & | (x_9x_8x_7x_6x_5x_4x_3x_2x_1x_0)_{10} \\
+\end{align*}
+gilt. Wie lautet $n$?
+\end{problem}
+
+\begin{solution}
+  Es sei $\vmathbb{9} := (x_9)_{10}, \vmathbb{8} := (x_9x_8)_{10},..., \vmathbb{0} := (x_9x_8x_7x_6x_5x_4x_3x_2x_1x_0)_{10}$ und $k_{\vmathbb{9}} := 1, ..., k_{\vmathbb{0}} := 10$.
+
+  Nach der Teilbarkeitsregel für $10$ gilt, dass $\vmathbb{0}$ mit einer Null enden muss; dies sieht man leicht anhand der Betrachtung $\vmathbb{0} = 10^9x_9 + 10^8x_8 + ... + 10^0x_0 = x_0 = 0\mod{10}$. Da eine Zahl genau dann durch $5$ teilbar ist, wenn ihre letzte Stelle $0$ oder $5$ ist, folgt sofort $x_5 = 5$ - dies kann man wieder leicht mittels Modulararithmetik nachweisen.
+  Weiterhin gilt für $\vmathbb{k} \in \{\vmathbb{2}, \vmathbb{4}, ... , \vmathbb{8}\}: k_{\vmathbb{k}} | \vmathbb{k} \implies \vmathbb{k} = 0 \mod{2}$, woraus direkt folgt $\{x_8, x_6, x_4, x_2\} = \{2,4,6,8\}$ und $\{x_9, x_7, x_3, x_1\} = \{1,3,7,9\}$.
+  Nach der Teilbarkeitsregel für $3$\footnote{Eine Zahl ist genau dann durch 3 teilbar, wenn ihre Quersumme durch 3 teilbar ist, da $\forall k \in \mathbb{N} : 10^k = (9+1)^k = 1 \mod{3}$.} gilt außerdem $3 | \vmathbb{7} \iff \vmathbb{7} = 10^2 x_9 + 10 x_8 + x_7 = x_9 + x_8 + x_7 = 0 \mod{3}$. Weiterhin gilt $6 | \vmathbb{4} \implies \sum_{k=4}^9 x_k = 0 \mod{3}$, da eine durch 6 teilbare Zahl auch durch 3 teilbar sein muss. Subtrahieren wir die erste von der zweiten Gleichung erhalten wir somit $x_4 + x_5 + x_6 = x_4 + 5 + x_6 = 0 \mod{3} \iff x_4 + x_6 = -5 = 1 \mod{3}$. Aus der Teilbarkeitsregel für $4$\footnote{Eine Zahl $(a_n...a_0)_{10}$ ist genau dann durch 4 teilbar, wenn $(a_1a_0)_{10}$ durch vier teilbar ist. Dies gilt weil $\sum_0^n 10^k a_k = \sum_0^n 2^k a_k = a_0 + 2 a_1 + \sum_0^{n-2} 4 \cdot 2^k a_k = a_0 + 2a_1 \mod{4}$.} folgt außerdem $4 | \vmathbb{6} \iff 4 | (x_7 x_6)_{10}$. Im Intervall $[10,99]$ liegen allerdings nur die Lösungen $4^2 = 16$ und $4^3 = 64$, und wir wissen, dass $x_7$ ungerade sein muss. Es folgt somit $x_7 = 1, x_6 = 6$. Zusammen mit dem vorherigen Ergebnis erhalten wir somit $x_4 = 1 - 6 = 1 \mod{3} \implies x_4 = 4$. Wir wissen also \begin{align*}
+    x_0           & = 0           \\
+    x_4           & = 4           \\
+    x_5           & = 5           \\
+    x_6           & = 6           \\
+    x_7           & = 1           \\
+    x_2, x_8      & \in \{2,8\}   \\
+    x_1, x_3, x_9 & \in \{3,7,9\}
+  \end{align*}
+
+  Nach der Teilbarkeitsregel für $8$\footnote{Eine Zahl $(a_n...a_0)_{10}$ ist genau dann durch 8 teilbar, wenn $(a_2a_1a_0)_{10}$ durch acht teilbar ist. Beweis analog zur Regel für Teilbarkeit durch 4.} gilt: $8 | \vmathbb{2} \iff 8 | (x_4x_3x_2)_{10} \iff 10^2x_4 + 10x_3 + x_2 = 4\cdot4 + 2x_3 + x_2 = 2x_3 + x_2 = 0 \mod{8}$. Ist $x_2 = 2$ dann gilt $2x_3 + x_2 = 0  \mod{8} \iff 2x_3 = 6 \mod{8}$, was für $x_3 \in \{3,7\}$ wahr ist. Ist hingegen $x_2 = 8$ dann gilt $2x_3 = 0 \mod{8}$, was mit den möglichen Werten für $x_3$ nicht lösbar ist. Daher muss also $x_2 = 2, x_3 \in \{3,7\}$ gelten, was direkt $x_8 = 8$ impliziert.
+  Wir wissen weiterhin nach der Dreierteilbarkeitsregel, dass $x_9 + x_8 + x_7 = 0 \mod{3} \iff x_9 = -(8 + 1) = 0 \mod{3}$. Die verbleibenden Möglichkeiten sind
+  \begin{align*}
+    x_9  = 3, x_3 = 7, x_1 = 9 \\
+    x_9 = 9, x_3 = 3, x_1 = 7  \\
+    x_9 = 9, x_3 = 7, x_1 = 3
+  \end{align*}
+  Diese drei Möglichkeiten werden eindeutig durch die Wahl von $x_9, x_3$ identifiziert und es gilt $$\vmathbb{3} = \begin{cases}
+      0 & x_9 = 3, x_3 = 7, \\
+      2 & x_9 = 9, x_3 = 3, \\
+      6 & x_9 = 9, x_3 = 3
+    \end{cases} \mod{7}.$$ Daraus folgt per Widerspruch, dass nur die erste Variante eine Lösung sein kann und es gilt $n = 3816547290$.
+\end{solution}
+
+% \section{Insel-Chamäleons}
+% 
+% \subsection{Grundproblem}
+% 
+% \begin{problem}
+% Auf einer Insel befinden sich 13 graue, 15 braune und 17 rote Chamäleons. Treffen sich % zwei Chamäelons verschiedener Farben, dann wechseln sie ihre Farbe zur am Treffen % nicht beteiligten Farbe (also würden sich z.B. ein graues und ein braunes Chamäleon % beim Treffen rot färben). Können sich alle Chamäelons so treffen, dass alle Chamäelons % die selbe Farbe haben?
+% \end{problem}
+% 
+% \begin{solution}
+% 
+%   Wir bezeichnen die drei Farben mit $a,b,c$, dann lassen sich die Treffen durch % folgende "Rezepte" darstellen:
+%   $$
+%     2c = -a - b \\
+%     2b = -a - c \\
+%     2a = -b - c.
+%   $$
+%   Wir suchen nun eine Kombination dieser Rezepte um 13, 15, 17 Chamäleons zu % "verbrauchen". Es ist also das lineare System \begin{align*}
+%     \left(\begin{matrix}
+%       1  & 1  & -2 \\
+%       1  & -2 & 1  \\
+%       -2 & 1  & 1  \\
+%     \end{matrix}\right) \left(\begin{matrix}
+%       a \\
+%       b \\
+%       c
+%     \end{matrix}\right) = \left(\begin{matrix}
+%       13 \\
+%       15 \\
+%       17 \\
+%     \end{matrix}\right)
+%   \end{align*} zu lösen.
+% 
+%   Man sieht durch eine Rangbetrachtung leicht, dass dieses System nicht lösbar ist.
+% 
+% \end{solution}
+% 
+% \subsection{Variation}
+% 
+% \begin{problem}
+% Auf einer Insel befinden sich 13 graue, 15 braune und 17 rote Chamäleons. Treffen sich % zwei Chamäelons verschiedener Farben, dann produzieren sie ein junges Chamäleon der % dritten Farbe. Können sich alle Chamäelons so treffen, dass alle verbleibenden % Chamäelons die selbe Farbe haben?
+% \end{problem}
+% 
+% \begin{solution}
+% 
+%   Wie zuvor bezeichnen wir die drei Farben mit $a,b,c$, und stellen unsere Rezepte auf:
+%   $$
+%     c = -a - b \\
+%     b = -a - c \\
+%     a = -b - c.
+%   $$
+%   Wir suchen nun eine Kombination dieser Rezepte um 13, 15, 17 Chamäleons zu % "verbrauchen". Es ist also das lineare System \begin{align*}
+%     \left(\begin{matrix}
+%       1  & 1  & -1 \\
+%       1  & -1 & 1  \\
+%       -1 & 1  & 1  \\
+%     \end{matrix}\right) \left(\begin{matrix}
+%       a \\
+%       b \\
+%       c
+%     \end{matrix}\right) = \left(\begin{matrix}
+%       13 \\
+%       15 \\
+%       17 \\
+%     \end{matrix}\right)
+%   \end{align*} zu lösen.
+% 
+%   Dieses System wird eindeutig durch $(a,b,c) = (14,15,16)$ gelöst; es muss also 13 % mal das $a$-Rezept, 15 mal das $b$-Rezept und 17 mal das $c$-Rezept benutzt werden. % Wir starten mit $13a+15b+17c$ als initialem Systemzustand und wenden 14 mal das % $a$-Rezept an um $27a+b+3c$ und einen "Rezeptpool" $(0,15,16)$ zu erhalten. Nun % wenden wir Rezept $c$ an um $26a+4c, (0, 15, 15)$ zu erhalten. Wir verfahren wir % folgt weiter:
+%   \begin{align}
+%     13a & + 15b+ 17c & , (14 , 15 , 16) \\
+%     27a & + 1b + 3c  & , (0  , 15 , 16) \\
+%     26a & + 0b + 4c  & , (0  , 15 , 15) \\
+%     22a & + 4b + 0c  & , (0  , 11 , 15) \\
+%     18a & + 0b + 4c  & , (0  , 11 , 11) \\
+%     14a & + 4b + 0c  & , (0  , 7  , 11) \\
+%     10a & + 0b + 4c  & , (0  , 7  , 7)  \\
+%     6a  & + 4b + 0c  & , (0  , 3  , 7)  \\
+%     2a  & + 0b + 4c  & , (0  , 3  , 3)  \\
+%     0a  & + 3b + 1c  & , (0  , 0  , 3)  \\
+%   \end{align}
+% 
+%   \begin{align}
+%     -a = b + c              \\
+%     -b = a + c              \\
+%     -c = a + b              \\
+%     13a + 15b + 17c | -13a  \\
+%     = 15b + 17c + 13(b + c) \\
+%     = 28b + 30c | + 28a     \\
+%     = 28b + 28c + 2c - 28(b + c)
+%     = 2c
+%   \end{align}
+% 
+% \end{solution}
+
+\section{Kreise}
+
+Das folgende Rätsel stammt aus der Sammlung geometrischer Rätsel von Catronia Agg\footnote{\url{https://twitter.com/Cshearer41/status/1300392090397016066/photo/1}}.
+
+\begin{problem}
+In welchem Verhältnis stehen die blaue und orangene Fläche?
+\begin{center}
+  \begin{tikzpicture}
+    \begin{scope}
+      \clip (-3,0) rectangle (3,3);
+      \filldraw[fill=orange!40!white] (0,0) circle(3);
+      \draw (-3,0) -- (3,0);
+    \end{scope}
+    \begin{scope}
+      \clip (-3,0) rectangle (-3+2.4,2.4);
+      \filldraw[fill=blue!40!white, draw=black] (-3+2.4,0) circle(2.4);
+      \draw (-3+2.4,0) -- (-3+2.4,2.4);
+    \end{scope}
+    \begin{scope}
+      \clip (-3+2.4,0) rectangle (-3+2*2.4,2.4);
+      \filldraw[fill=blue!40!white, draw=black] (-3+2.4,2.4) circle(2.4);
+      \draw (-3+2.4,2.4) -- (-3+ 2 * 2.4,2.4);
+    \end{scope}
+  \end{tikzpicture}
+\end{center}
+\end{problem}
+
+\begin{solution}
+  Wir bezeichnen den Radius der kleinen Kreise mit $r$, den des großen mit $R$ und erweitern obige Zeichnung wie folgt:
+
+  \begin{center}
+    \begin{tikzpicture}
+      \begin{scope}
+        \clip (-3,0) rectangle (3,3);
+        \filldraw[fill=orange!40!white] (0,0) circle(3);
+        \draw (-3,0) -- (3,0);
+      \end{scope}
+      \begin{scope}
+        \clip (-3,0) rectangle (-3+2.4,2.4);
+        \draw (-3,0) rectangle (-3+2.4,2.4);
+        \filldraw[fill=blue!40!white, draw=black] (-3+2.4,0) circle(2.4);
+      \end{scope}
+      \begin{scope}
+        \clip (-3+2.4,0) rectangle (-3+2*2.4,2.4);
+        \draw (-3+2.4,0) rectangle (-3+2*2.4,2.4);
+        \filldraw[fill=blue!40!white, draw=black] (-3+2.4,2.4) circle(2.4);
+      \end{scope}
+      \draw (-3,0) -- node[above] {$L$} (-3 + 2*2.4, 2.4);
+      \draw (-3 + 2*2.4, 2.4) -- node[above] {$l$} (3,0);
+    \end{tikzpicture}
+  \end{center}
+
+  Es gilt
+  \begin{align*}
+    r^2 + (2r)^2 = |L|^2 \\
+    (2R - 2r)^2 + r^2 = |l|^2
+  \end{align*}
+  und nach dem Satz des Thales stehen $L$ und $l$ senkrecht, was die Gleichheit $|L|^2 + |l|^2 = (2R)^2$ liefert. Kombinieren wir diese Gleichungen erhalten wir $r^2 + (2r)^2 + 4(R - r)^2 + r^2 = (2R)^2 \iff 10r^2 - 8rR = 0 \underset{r > 0}{\iff} R = \frac{5}{4}r$ bzw. $\frac{R}{r} = \frac{5}{4}$. Da die Fläche proportional zum Quadrat des Radius ist, gilt $\frac{A_{\text{Orange}}}{A_{\text{Blau}}} = \frac{25}{16}$.
+\end{solution}
+
+\section{Ausgewählte Probleme aus \emph{Problems for children from 5 to 15}}
+
+In diesem Abschnitt werden diverse Rätsel, bzw. deren Verallgemeinerungen aus einer Sammlung von V.I. Arnolds behandelt\cite{ProblemsChildren}.
+
+\subsection{Nr. 19 -- Würfel-Raupe}
+
+\begin{problem}
+Eine Raupe möchte sich in einem würfelförmigen Raum von der linken unteren ($P$) zur rechten oberen Ecke ($Q$) bewegen. Was ist die kürzeste Route entlang den Wänden des Raumes?
+\begin{center}
+  \begin{tikzpicture}
+    \draw (0,0) rectangle (3,3);
+    %\draw[dashed] (1.25,1.25) rectangle (3+1.25,3+1.25);
+    %\draw[dashed] (0,0) -- (1.25,1.25);
+    \node at (0,0)[left, below] {$P$};
+    \node at (3+1.25,3+1.25)[right, above] {$Q$};
+    \draw (3,0) -- (1.25+3,1.25);
+    \draw (3,3) -- (1.25+3,1.25+3);
+    \draw (0,3) -- (1.25,1.25+3);
+    \draw (1.25,1.25+3) -- (1.25+3,1.25+3);
+    \draw (1.25+3,1.25+3) -- (1.25+3,1.25);
+  \end{tikzpicture}
+\end{center}
+\end{problem}
+
+\begin{solution}
+  Wir schneiden den Würfel auf um ein Netz zu erhalten:
+  \begin{center}
+    \begin{tikzpicture}
+      \draw (0,0) rectangle (1,1);
+      \draw (1,1) rectangle ++(-1,1);
+      \draw (0,0) rectangle ++(1,-1);
+      \draw (1,1) rectangle ++(1,-1);
+      \draw (0,-1) rectangle ++(1,-1);
+      \draw (0,0) rectangle (-1,1);
+
+      \node at (0,0) {$\bullet$};
+      \node at (-0.2,-0.2)[left] {$P$};
+
+      \node at (1,2) {$\bullet$};
+      \node at (1.2,2.2)[right] {$Q$};
+      \node at (2,1) {$\bullet$};
+      \node at (2.2,1.2)[right] {$Q$};
+      \node at (1,-2) {$\bullet$};
+      \node at (1.2,-1.8)[right] {$Q$};
+      %\node at (3+1.25,3+1.25)[right, above] 
+    \end{tikzpicture}
+  \end{center}
+  Nun nehmen wir mehrere dieser Netze und ''kleben'' zwei Kanten zusammen wenn diese im gefalteten Würfel zusammenfallen und verbinden alle $Q$'s zum zentralen(blauen) $P$:
+  \begin{center}
+    \begin{tikzpicture}
+      \draw[blue] (0,0) rectangle ++(1,1);
+      \draw[blue] (0,1) rectangle ++(1,1);
+      \draw[blue] (0,-1) rectangle ++(1,1);
+      \draw[blue] (1,0) rectangle ++(1,1);
+      \draw[blue] (0,-2) rectangle ++(1,1);
+      \draw[blue] (-1,0) rectangle ++(1,1);
+      \node[blue] at (0,0) {$\bullet$};
+      \node[blue] at (-0.2,-0.2)[left] {$P$};
+      \node[blue] at (1,2) {$\bullet$};
+      \node[blue] at (1.2,2.2)[right] {$Q$};
+
+      \draw[violet]    (0,   4+0) rectangle ++(1,1);
+      \draw[violet]    (0,   4+1) rectangle ++(1,1);
+      \draw[violet]    (0,   4+-1) rectangle ++(1,1);
+      \draw[violet]    (1,   4+0) rectangle ++(1,1);
+      \draw[violet]    (0,   4+-2) rectangle ++(1,1);
+      \draw[violet]    (-1,  4+0) rectangle ++(1,1);
+      \node[violet] at (0,   4+0) {$\bullet$};
+      \node[violet] at (-0.2,4+-0.2)[left] {$P$};
+      \node[violet] at (1,   4+2) {$\bullet$};
+      \node[violet] at (1.2, 4+2.2)[right] {$Q$};
+
+      \draw[teal]    (0,   -4+0) rectangle ++(1,1);
+      \draw[teal]    (0,   -4+1) rectangle ++(1,1);
+      \draw[teal]    (0,   -4+-1) rectangle ++(1,1);
+      \draw[teal]    (1,   -4+0) rectangle ++(1,1);
+      \draw[teal]    (0,   -4+-2) rectangle ++(1,1);
+      \draw[teal]    (-1,  -4+0) rectangle ++(1,1);
+      \node[teal] at (0,   -4+0) {$\bullet$};
+      \node[teal] at (-0.2,-4+-0.2)[left] {$P$};
+      \node[teal] at (1,   -4+2) {$\bullet$};
+      \node[teal] at (1.2, -4+2.2)[right] {$Q$};
+
+      \draw (0,0) -- (1,2);
+      \draw (0,0) -- (1,-2) -- (3, -1) -- (2,1) -- (0,0);
+      \draw (-1,-1) -- (1,-2);
+      \draw (-2,1) -- (0,0);
+      %\draw (0,0) -- (-1,0.5); \draw (0,-1.5) -- (1,-2);
+      %\node at (3+1.25,3+1.25)[right, above] 
+
+      \draw[orange] (0        +2,0) rectangle ++(1,1);
+      \draw[orange] (0        +2,-1) rectangle ++(1,1);
+      \draw[orange] (0        +2,-2) rectangle ++(1,1);
+      \draw[orange] (0        +2,-3) rectangle ++(1,1);
+      \draw[orange] (-1       +2,-2) rectangle ++(1,1);
+      \draw[orange] (1        +2,-2) rectangle ++(1,1);
+      \node[orange] at (1     +2,-1) {$\bullet$};
+      \node[orange] at (1-0.2 +2,-1-0.2)[left] {$P$};
+      \node[orange] at (0     +2,-3) {$\bullet$};
+      \node[orange] at (0.2   +2,-3 + 0.2)[right] {$Q$};
+      \node[orange] at (0      +2,1) {$\bullet$};
+      \node[orange] at (0.2    +2,1 + 0.2)[right] {$Q$};
+
+      \draw[green] (0         -2,0) rectangle ++(1,1);
+      \draw[green] (0         -2,-1) rectangle ++(1,1);
+      \draw[green] (0         -2,-2) rectangle ++(1,1);
+      \draw[green] (0         -2,-3) rectangle ++(1,1);
+      \draw[green] (-1        -2,-2) rectangle ++(1,1);
+      \draw[green] (1         -2,-2) rectangle ++(1,1);
+      \node[green] at (1      -2,-1) {$\bullet$};
+      \node[green] at (1-0.2  -2,-1-0.2)[left] {$P$};
+      \node[green] at (0      -2,-3) {$\bullet$};
+      \node[green] at (0.2    -2,-3 + 0.2)[right] {$Q$};
+      \node[green] at (0      -2,1) {$\bullet$};
+      \node[green] at (0.2    -2,1 + 0.2)[right] {$Q$};
+
+
+    \end{tikzpicture}
+  \end{center}
+
+  In einem einzelnen Netz eingezeichnet sind also dies die möglichen Pfade:
+
+  \begin{center}
+    \begin{tikzpicture}
+      \draw (0,0) rectangle (1,1);
+      \draw (1,1) rectangle ++(-1,1);
+      \draw (0,0) rectangle ++(1,-1);
+      \draw (1,1) rectangle ++(1,-1);
+      \draw (0,-1) rectangle ++(1,-1);
+      \draw (0,0) rectangle (-1,1);
+
+      \node at (0,0) {$\bullet$};
+      \node at (-0.2,-0.2)[left] {$P$};
+
+      \node at (1,2) {$\bullet$};
+      \node at (1.2,2.2)[right] {$Q$};
+      \node at (2,1) {$\bullet$};
+      \node at (2.2,1.2)[right] {$Q$};
+      \node at (1,-2) {$\bullet$};
+      \node at (1.2,-1.8)[right] {$Q$};
+      \draw (0,0) -- (1,2);
+      \draw (0,0) -- (2,1);
+      \draw (0,0) -- (1,-2);
+      \draw (0,0) -- (-1,0.5); \draw (0,-1.5) -- (1,-2);
+      %\node at (3+1.25,3+1.25)[right, above] 
+    \end{tikzpicture}
+  \end{center}
+  Da jede Ecke eines Würfels an drei Flächen angrenzt, muss auch im Netz jeder Punkt an drei Flächen angrenzen. Man sieht sofort, dass es keinen kürzeren als die eingezeichneten Wege geben kann. Somit gibt es mehrere Möglichkeiten für den kürzesten Weg und die Länge in Abhängigkeit der Seitelänge $a$ des Würfels beträgt $\sqrt5 a$.
+
+  \begin{center}
+    \begin{tikzpicture}
+      \draw (0,0) rectangle (3,3);
+      \draw[dashed, gray] (1,1) rectangle (3+1,3+1);
+      \draw[dashed, gray] (0,0) -- (1,1);
+      \node at (0,0)[left, below] {$P$};
+      \node at (3+1,3+1)[right, above] {$Q$};
+      \draw (3,0) -- (1+3,1);
+      \draw (3,3) -- (1+3,1+3);
+      \draw (0,3) -- (1,1+3);
+      \draw (1,1+3) -- (1+3,1+3);
+      \draw (1+3,1+3) -- (1+3,1);
+
+      \draw (0,0) -- (1.5,3) -- (3+1,3+1);
+      \draw (0,0) -- (3,1.5) -- (3+1,3+1);
+      \draw[dotted] (0,0) -- (1+1.5,1) -- (3+1,3+1);
+      \draw[dotted] (0,0) -- (1,1+1.5) -- (3+1,3+1);
+      %\draw[dotted] (1.5,3) -- (3,1.5) -- (1+1.5,1) -- (1,1+1.5) -- (1.5,3);
+    \end{tikzpicture}
+  \end{center}
+
+  Man kann auch etwas formaler zeigen, dass dies tatsächlich die kürzesten Verbindungsstrecken sind. Um $P$ und $Q$ zu verbinden muss die Verbindungsstrecke zwangsläufig irgendwann eine Kante des Würfels kreuzen oder über eine Ecke laufen. Sei $Z$ dieser erste Kreuzungspunkt mit einer Kante bzw. einem Eckpunkt. Läuft der Pfad über eine Ecke, dann ist der kürzest mögliche der direkte Pfad $PZQ$ mit der Länge $\sqrt{2}a + a = (1+\sqrt{2}) a > \sqrt{5} a$ - demnach kann $Z$ nicht auf einer Ecke liegen. Liege also $Z$ o.B.d.A. auf der oberen vorderen Würfelkante (die anderen Fälle sind gleich modulo Symmetrie). Die kürzeste Strecke ist wieder die direkte Verbindungsstrecke $\overline{PZQ}$. Wir platzieren ein Koordinatensystem, sodass $P=(0,0,0), Q = (1,1,1), Z = (z, 1, 0)$ und den Achsenrichtungen parallel zu den Kanten des Würfels. Dann gilt $\overline{PZQ} = \abs{Z - P}_2 + \abs{Q - Z}_2 = \sqrt{z^2 + 1} + \sqrt{(z-1)^2 + 1}$. Wir minimieren nun diesen Ausdruck über $z$ und erhalten $$\arg \min_{0<z<1} \overline{PZQ} = \frac{1}{2}, \min_{0<z<1} \overline{PZQ} = \sqrt{5}.$$
+\end{solution}
+
+\subsection{Nr. 36 -- Kubische Differenz}
+
+\begin{problem}
+Die Summe der dritten Potenzen dreier ganzer Zahlen wird von der dritten Potenz der selben Zahlen subtrahiert. Ist die Differenz stets durch drei teilbar?
+\end{problem}
+
+\begin{solution}
+  Seien $a,b,c \in \mathbb{Z}$. Die obige Frage ist, ob $3 | (a+b+c)^3 - (a^3+b^3+c^3)$ immer wahr ist. Diese Frage ist äquivalent zu $(a+b+c)^3 - (a^3+b^3+c^3) = 0 \mod{3}$, mit dem Multinomialsatz gilt $$(a+b+c)^3 = \sum_{k_1+k_2+k_3 = 3} \binom{3}{k_1, k_2, k_3} a^{k_1} b^{k_2} c^{k_3}.$$
+  Da 3 die Partionen $\{\{3\}, \{2,1\}, \{1,1,1\}\}$ besitzt, gilt in dieser Summe modulo Permutation stets $(k_1, k_2, k_3) \in \{(3,0,0), (2,1,0), (1,1,1)\}$. Der Multinomialkoeffizient $\binom{3}{k_1, k_2, k_3} = \frac{3!}{k_1! k_2! k_3!}$ hat somit in genau drei Fällen im Nenner eine drei, wodurch diese sich mit der Zähler wegkürzt. Für alle Fälle in denen dies nicht zutrifft, ist der Nenner eine Zweierpotenz welche den Zähler nicht teilt, somit sind all diese Summenglieder insbesondere Vielfache von 3 und somit $0 \mod{3}$ und es gilt
+  $$
+    (a+b+c)^3 - (a^3+b^3+c^3) = \frac{3!}{3!0!0!}a^3 + \frac{3!}{3!0!0!}b^3 + \frac{3!}{3!0!0!}c^3 - (a^3+b^3+c^3) = 0 \mod{3}.
+  $$
+  Damit ist gezeigt, dass die Aussage für alle $a,b,c \in \mathbb{Z}$ gilt. Tatsächlich lässt sich sofort sagen, dass im Allgemeinen $\forall a_0,...,a_N \in \mathbb{Z} : 3 | (\sum_{k=0}^N a_k)^3 - (\sum_{k=0}^N a_k^3)$ gilt.
+\end{solution}
+
+\subsection{Nr. 37 -- Quintische und septische Differenzen}
+
+Hierbei handelt es sich um Abwandlungen von Problem Nr. 36.
+
+\begin{problem}
+Die Summe der fünften bzw. siebten Potenzen ganzer Zahlen wird von der fünften bzw. siebten Potenz der selben Zahlen subtrahiert. Ist die Differenz stets durch fünf bzw. sieben teilbar?
+\end{problem}
+
+Wir verallgemeinern dieses Problem sofort zu
+
+\subsection{Primpotenzielle Differenzen}
+
+\begin{problem}
+Sei $p$ eine Primzahl.
+Die Summe der $p$-ten Potenzen ganzer Zahlen wird von der $p$-ten Potenz der selben Zahlen subtrahiert. Ist die Differenz stets durch $p$ teilbar?
+\end{problem}
+
+\begin{solution}
+
+  Sei $p \in \mathbb{P}$ eine Primzahl und seien $a_0,...,a_n \in \mathbb{Z}$, dann gilt
+  \begin{align}
+    \left(\sum_{k=0}^n a_k\right)^p - \sum_{k=0}^n a_k^p = \sum_{\sum_{r=0}^n k_r = p} \binom{p}{k_0,\hdots,k_n} \prod_{r=0}^n a_r^{k_r} - \sum_{k=0}^n a_k^p. \label{fatMultinomial}
+  \end{align}
+  Da $p$ prim ist, ist $\mathbb{Z}/p\mathbb{Z}$ ein Körper und somit sind alle Elemente ungleich Null invertierbar. Dies sichert die Wohldefiniertheit der Multinomialkoeffizienten über $\mathbb{Z}/p\mathbb{Z}$.
+  Ist $(k_0,...,k_n)$ eine Partition von $p$, dann gilt \begin{align}
+    \binom{p}{k_0, \hdots, k_n} = \frac{p!}{\prod_{r=0}^n k_r!} = \begin{cases}
+      (\prod_{r=0, k_r \neq p}^n k_r!)^{-1} = (\prod_{r=0, k_r \neq p}^n 0!)^{-1} = 1 & \text{ wenn } p \in \{k_0,...,k_n\}, \\
+      p \cdot \frac{(p-1)!}{\prod_{r=0}^n k_r!} = 0                                   & \text{ sonst.}
+    \end{cases}
+  \end{align} Es gibt genau $n+1$ Summanden in Gleichung \ref{fatMultinomial} bei denen hierbei der obere Zweig gewählt wird, nämlich für $r=0,...,n : k_r = p$. Demnach gilt
+  $$
+    \left(\sum_{k=0}^n a_k\right)^p - \sum_{k=0}^n a_k^p = 0 \mod{p}.
+  $$
+  Die Differenz ist also stets durch $p$ teilbar.
+  Da 5 und 7 Primzahlen sind folgt Problem 37 somit direkt.
+
+\end{solution}
+
+\printbibliography
+\end{document}

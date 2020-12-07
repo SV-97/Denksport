@@ -1,0 +1,105 @@
+\usepackage{arxiv}
+
+\usepackage[utf8]{inputenc} % allow utf-8 input
+\usepackage[T1]{fontenc}    % use 8-bit T1 fonts
+\usepackage{hyperref}       % hyperlinks
+\usepackage{url}            % simple URL typesetting
+\usepackage{booktabs}       % professional-quality tables
+\usepackage{nicefrac}       % compact symbols for 1/2, etc.
+\usepackage{microtype}      % microtypography
+\usepackage{lipsum}
+\usepackage{algpseudocode}
+\usepackage{algorithm}
+\usepackage[german]{babel} % prefer english over german
+\usepackage{multicol}
+\usepackage{tikz}
+\usetikzlibrary{angles,arrows,babel,calc,patterns,quotes}
+
+\usepackage{graphicx}
+\graphicspath{ {./img/} }
+
+\usepackage{minted}
+\usepackage{xcolor}
+\usemintedstyle{manni}
+
+\usepackage{eurosym}
+\usepackage{amstext}
+
+\usepackage{booktabs}
+
+\usepackage{amssymb, amsmath, amsthm, amsfonts}
+
+\usepackage{fontspec}
+
+\usepackage[backend=biber, style=alphabetic]{biblatex}
+\addbibresource{Quellen.bib}
+
+\usepackage{newunicodechar}
+
+%\usepackage[santa]{realhats}
+
+\setmonofont[
+  Mapping=tex-text,
+  Scale=0.90,
+  UprightFont=*-Regular,
+  BoldFont=*-Bold,
+  ]{Fira Code}
+%\setmonofont[Mapping=tex-text, Scale=0.90,]{Droid Sans Mono}
+
+\theoremstyle{plain} %Text ist Kursiv
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Korollar}
+
+\theoremstyle{definition} %Text ist \"upright"
+\newtheorem{remark}[theorem]{Bemerkung}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Beispiel}
+\newtheorem{algo}[theorem]{Algorithm}
+\newtheorem{problem}[theorem]{Problem}
+\let\proof\undefined
+\newtheorem{proof}[theorem]{Beweis}
+\newtheorem{theo}[theorem]{Satz}
+\newtheorem{anno}[theorem]{Anmerkung}
+\newtheorem{solution}[theorem]{Lösung}
+
+% Colors
+\definecolor{bg}{rgb}{0.95,0.95,0.95}
+
+\newcommand{\sfloor}[1]{\left\lfloor #1 \right\rfloor} % scaling floor function
+\newcommand{\sceil}[1]{\left\lceil #1 \right\rceil} % scaling ceil function
+\newcommand{\floor}[1]{\lfloor #1 \rfloor} % floor function
+\newcommand{\ceil}[1]{\lceil #1 \rceil} % ceil function
+\newcommand{\specialset}[1]{\rm I\!#1} % render sets like R and N fancy
+\newcommand{\abs}[1]{\left\lVert#1\right\rVert} % Absolute value of #1
+\newcommand{\unit}[1]{\hat{#1}} % unit vector
+
+\newcommand{\cpp}[1]{\mintinline{cpp}|#1|}
+\newcommand{\make}[1]{\texttt{#1}}
+\newcommand{\bash}[1]{\mintinline{bash}|#1|}
+
+\title{ Grundlegendes Distributed Computing auf dem DELTA-Cluster der FHWS }
+
+\rhead{\includegraphics[width=1.5cm]{FHWS}}
+\lhead{}
+
+\author{
+  Stefan Volz\\
+  Fakultät für angewandte Natur- und Geisteswissenschaften\\
+  Hochschule für angewandte Wissenschaften Würzburg-Schweinfurt\\
+  Studiengang Technomathematik\\
+  Matrikelnummer: 3519001\\
+  \texttt{stefan.volz@student.fhws.de}\\
+}
+
+\date{\today, Sommersemester 2020}
+
+%\renewcommand{\headeright}{Studienarbeit}
+%\renewcommand{\undertitle}{Studienarbeit}
+
+\begin{document}
+
+\begin{center}
+  \includegraphics[width=0.5\textwidth]{FHWS}  
+\end{center}
